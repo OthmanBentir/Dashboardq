@@ -1,18 +1,4 @@
 import React from 'react';
-import {
-  BarChart3,
-  TrendingUp,
-  TrendingDown,
-  AlertTriangle,
-  CheckCircle,
-  XCircle,
-  Newspaper,
-  Lightbulb,
-  Activity,
-  Database,
-  Shield,
-  Target
-} from 'lucide-react';
 
 // Mock data for the dashboard
 const mockData = {
@@ -42,9 +28,124 @@ const mockData = {
   ]
 };
 
+// CSS-based icon components
+const TrendingUpIcon = ({ className }: { className?: string }) => (
+  <div className={`inline-flex items-center justify-center ${className}`}>
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+      <polyline points="23 6 13.5 15.5 8.5 10.5 1 18"></polyline>
+      <polyline points="17 6 23 6 23 12"></polyline>
+    </svg>
+  </div>
+);
+
+const TrendingDownIcon = ({ className }: { className?: string }) => (
+  <div className={`inline-flex items-center justify-center ${className}`}>
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+      <polyline points="23 18 13.5 8.5 8.5 13.5 1 6"></polyline>
+      <polyline points="17 18 23 18 23 12"></polyline>
+    </svg>
+  </div>
+);
+
+const ShieldIcon = ({ className }: { className?: string }) => (
+  <div className={`inline-flex items-center justify-center ${className}`}>
+    <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+      <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+    </svg>
+  </div>
+);
+
+const ActivityIcon = ({ className }: { className?: string }) => (
+  <div className={`inline-flex items-center justify-center ${className}`}>
+    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+      <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline>
+    </svg>
+  </div>
+);
+
+const TargetIcon = ({ className }: { className?: string }) => (
+  <div className={`inline-flex items-center justify-center ${className}`}>
+    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+      <circle cx="12" cy="12" r="10"></circle>
+      <circle cx="12" cy="12" r="6"></circle>
+      <circle cx="12" cy="12" r="2"></circle>
+    </svg>
+  </div>
+);
+
+const AlertTriangleIcon = ({ className }: { className?: string }) => (
+  <div className={`inline-flex items-center justify-center ${className}`}>
+    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+      <path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"></path>
+      <line x1="12" y1="9" x2="12" y2="13"></line>
+      <line x1="12" y1="17" x2="12.01" y2="17"></line>
+    </svg>
+  </div>
+);
+
+const NewspaperIcon = ({ className }: { className?: string }) => (
+  <div className={`inline-flex items-center justify-center ${className}`}>
+    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+      <path d="M4 22h16a2 2 0 0 0 2-2V4a2 2 0 0 0-2-2H8a2 2 0 0 0-2 2v16a2 2 0 0 1-2 2Zm0 0a2 2 0 0 1-2-2v-9c0-1.1.9-2 2-2h2"></path>
+      <path d="M18 14h-8"></path>
+      <path d="M15 18h-5"></path>
+      <path d="M10 6h8v4h-8V6Z"></path>
+    </svg>
+  </div>
+);
+
+const DatabaseIcon = ({ className }: { className?: string }) => (
+  <div className={`inline-flex items-center justify-center ${className}`}>
+    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+      <ellipse cx="12" cy="5" rx="9" ry="3"></ellipse>
+      <path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3"></path>
+      <path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"></path>
+    </svg>
+  </div>
+);
+
+const BarChartIcon = ({ className }: { className?: string }) => (
+  <div className={`inline-flex items-center justify-center ${className}`}>
+    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+      <line x1="12" y1="20" x2="12" y2="10"></line>
+      <line x1="18" y1="20" x2="18" y2="4"></line>
+      <line x1="6" y1="20" x2="6" y2="16"></line>
+    </svg>
+  </div>
+);
+
+const LightbulbIcon = ({ className }: { className?: string }) => (
+  <div className={`inline-flex items-center justify-center ${className}`}>
+    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+      <path d="M15 14c.2-1 .7-1.7 1.5-2.5 1-.9 1.5-2.2 1.5-3.5A6 6 0 0 0 6 8c0 1 .2 2.2 1.5 3.5.7.7 1.3 1.5 1.5 2.5"></path>
+      <path d="M9 18h6"></path>
+      <path d="M10 22h4"></path>
+    </svg>
+  </div>
+);
+
+const CheckCircleIcon = ({ className }: { className?: string }) => (
+  <div className={`inline-flex items-center justify-center ${className}`}>
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+      <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+      <polyline points="22 4 12 14.01 9 11.01"></polyline>
+    </svg>
+  </div>
+);
+
+const XCircleIcon = ({ className }: { className?: string }) => (
+  <div className={`inline-flex items-center justify-center ${className}`}>
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+      <circle cx="12" cy="12" r="10"></circle>
+      <line x1="15" y1="9" x2="9" y2="15"></line>
+      <line x1="9" y1="9" x2="15" y2="15"></line>
+    </svg>
+  </div>
+);
+
 const StatusIndicator = ({ isPositive, value }: { isPositive: boolean; value: number }) => (
   <div className={`flex items-center gap-2 ${isPositive ? 'text-green-600' : 'text-red-600'}`}>
-    {isPositive ? <TrendingUp size={20} /> : <TrendingDown size={20} />}
+    {isPositive ? <TrendingUpIcon /> : <TrendingDownIcon />}
     <span className="font-semibold">{isPositive ? '+' : ''}{value}%</span>
   </div>
 );
@@ -87,7 +188,7 @@ function App() {
         {/* Card 1: Title */}
         <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-8 text-center">
           <div className="flex items-center justify-center gap-3 mb-4">
-            <Shield className="text-blue-600" size={32} />
+            <ShieldIcon className="text-blue-600" />
             <h1 className="text-3xl font-bold text-gray-900">Data Quality Dashboard</h1>
           </div>
           <p className="text-gray-600 text-lg">Monitor and improve your data quality metrics in real-time</p>
@@ -98,7 +199,7 @@ function App() {
           {/* Card 2: Data Quality Status */}
           <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6 hover:shadow-md transition-shadow">
             <div className="flex items-center gap-3 mb-4">
-              <Activity className="text-blue-600" size={24} />
+              <ActivityIcon className="text-blue-600" />
               <h2 className="text-lg font-semibold text-gray-900">Quality Status</h2>
             </div>
             <div className="space-y-3">
@@ -115,7 +216,7 @@ function App() {
           {/* Card 3: Global Data Quality */}
           <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6 hover:shadow-md transition-shadow">
             <div className="flex items-center gap-3 mb-4">
-              <Target className="text-green-600" size={24} />
+              <TargetIcon className="text-green-600" />
               <h2 className="text-lg font-semibold text-gray-900">Global Quality</h2>
             </div>
             <div className="text-center">
@@ -134,7 +235,7 @@ function App() {
           {/* Card 4: Anomalies to Treat */}
           <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6 hover:shadow-md transition-shadow">
             <div className="flex items-center gap-3 mb-4">
-              <AlertTriangle className="text-amber-600" size={24} />
+              <AlertTriangleIcon className="text-amber-600" />
               <h2 className="text-lg font-semibold text-gray-900">Anomalies</h2>
             </div>
             <div className="space-y-4">
@@ -157,7 +258,7 @@ function App() {
           {/* Card 5: Data Quality News */}
           <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6 hover:shadow-md transition-shadow">
             <div className="flex items-center gap-3 mb-4">
-              <Newspaper className="text-purple-600" size={24} />
+              <NewspaperIcon className="text-purple-600" />
               <h2 className="text-lg font-semibold text-gray-900">Latest News</h2>
             </div>
             <div className="space-y-3">
@@ -173,7 +274,7 @@ function App() {
           {/* Card 6: Data Quality Table */}
           <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6 hover:shadow-md transition-shadow lg:col-span-2">
             <div className="flex items-center gap-3 mb-4">
-              <Database className="text-indigo-600" size={24} />
+              <DatabaseIcon className="text-indigo-600" />
               <h2 className="text-lg font-semibold text-gray-900">Quality Metrics</h2>
             </div>
             <div className="overflow-x-auto">
@@ -193,9 +294,9 @@ function App() {
                       <td className="py-3 px-1">
                         <div className="flex items-center gap-1">
                           {row.status === 'Good' ? (
-                            <CheckCircle className="text-green-600" size={16} />
+                            <CheckCircleIcon className="text-green-600" />
                           ) : (
-                            <XCircle className="text-amber-600" size={16} />
+                            <XCircleIcon className="text-amber-600" />
                           )}
                           <span className={`text-sm ${row.status === 'Good' ? 'text-green-600' : 'text-amber-600'}`}>
                             {row.status}
@@ -212,7 +313,7 @@ function App() {
           {/* Card 7: Graph */}
           <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6 hover:shadow-md transition-shadow">
             <div className="flex items-center gap-3 mb-4">
-              <BarChart3 className="text-blue-600" size={24} />
+              <BarChartIcon className="text-blue-600" />
               <h2 className="text-lg font-semibold text-gray-900">Quality Trends</h2>
             </div>
             <SimpleBarChart />
@@ -224,7 +325,7 @@ function App() {
           {/* Card 8: Recommendations */}
           <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6 hover:shadow-md transition-shadow">
             <div className="flex items-center gap-3 mb-4">
-              <Lightbulb className="text-yellow-600" size={24} />
+              <LightbulbIcon className="text-yellow-600" />
               <h2 className="text-lg font-semibold text-gray-900">Recommendations</h2>
             </div>
             <div className="space-y-3">
