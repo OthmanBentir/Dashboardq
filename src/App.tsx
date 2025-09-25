@@ -464,6 +464,28 @@ function App() {
             </div>
           ))}
         </div>
+
+        {/* Control Definitions Section */}
+        <div className="space-y-6">
+          <div className="text-center">
+            <h2 className="text-3xl font-bold text-gray-900 mb-4">Control Definitions</h2>
+            <p className="text-gray-600 text-lg">Understanding each data quality control and its purpose</p>
+          </div>
+          
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {controlDefinitions.map((control, index) => (
+              <div key={index} className="bg-white rounded-xl shadow-sm border border-gray-200 p-6 hover:shadow-md transition-shadow">
+                <div className="flex items-center gap-3 mb-4">
+                  <div className="w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center">
+                    <span className="text-blue-600 font-bold text-sm">{index + 1}</span>
+                  </div>
+                  <h3 className="text-lg font-semibold text-gray-900">{control.title}</h3>
+                </div>
+                <p className="text-gray-700 leading-relaxed">{control.definition}</p>
+              </div>
+            ))}
+          </div>
+        </div>
       </div>
     </div>
   );
