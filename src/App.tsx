@@ -17,15 +17,34 @@ const mockData = {
     "Integration with new data source completed"
   ],
   tableData: [
-    { metric: "Completeness", score: "94%", status: "Good" },
-    { metric: "Accuracy", score: "89%", status: "Warning" },
-    { metric: "Consistency", score: "96%", status: "Good" }
+    { metric: "Completeness", score: 94, value: 1250 },
+    { metric: "Accuracy", score: 89, value: 2340 },
+    { metric: "Consistency", score: 96, value: 890 }
   ],
   recommendations: [
     "Implement automated data cleansing for email formats",
     "Add validation rules for phone number patterns",
     "Review data sources with high error rates"
-  ]
+  ],
+  controls: Array.from({ length: 6 }, (_, i) => ({
+    id: i + 1,
+    dataQualityStatus: {
+      improvement: Math.floor(Math.random() * 20) - 10,
+      isPositive: Math.random() > 0.5
+    },
+    globalDataQuality: Math.floor(Math.random() * 30) + 70,
+    anomaliesTreated: Math.floor(Math.random() * 50) + 20,
+    justifiedAnomalies: Math.floor(Math.random() * 30) + 10,
+    unjustifiedAnomalies: {
+      afterRules: Math.floor(Math.random() * 20) + 5,
+      beforeRules: Math.floor(Math.random() * 40) + 20
+    },
+    quarterlyData: [
+      { quarter: 'Q1', value: Math.floor(Math.random() * 30) + 70 },
+      { quarter: 'Q2', value: Math.floor(Math.random() * 30) + 70 },
+      { quarter: 'Q3', value: Math.floor(Math.random() * 30) + 70 }
+    ]
+  }))
 };
 
 // CSS-based icon components
@@ -181,6 +200,22 @@ const SimpleBarChart = () => (
   </div>
 );
 
+const QuarterlyChart = ({ data }: { data: Array<{ quarter: string; value: number }> }) => (
+  <div className="space-y-2">
+    <div className="flex justify-between items-end h-20 gap-2">
+      {data.map((item, index) => (
+        <div key={index} className="flex flex-col items-center gap-1">
+          <div 
+            className="bg-indigo-500 rounded-t w-6" 
+            style={{ height: `${(item.value / 100) * 100}%` }}
+          ></div>
+          <span className="text-xs text-gray-600">{item.quarter}</span>
+        </div>
+      ))}
+    </div>
+  </div>
+);
+
 function App() {
   return (
     <div className="min-h-screen bg-gray-50 p-6">
@@ -283,25 +318,16 @@ function App() {
                   <tr className="border-b border-gray-200">
                     <th className="text-left py-2 px-1 font-medium text-gray-900">Metric</th>
                     <th className="text-left py-2 px-1 font-medium text-gray-900">Score</th>
-                    <th className="text-left py-2 px-1 font-medium text-gray-900">Status</th>
+                    <th className="text-left py-2 px-1 font-medium text-gray-900">Value</th>
                   </tr>
                 </thead>
                 <tbody>
                   {mockData.tableData.map((row, index) => (
                     <tr key={index} className="border-b border-gray-100">
                       <td className="py-3 px-1 text-gray-900">{row.metric}</td>
-                      <td className="py-3 px-1 font-semibold text-gray-900">{row.score}</td>
+                      <td className="py-3 px-1 font-semibold text-gray-900">{row.score}%</td>
                       <td className="py-3 px-1">
-                        <div className="flex items-center gap-1">
-                          {row.status === 'Good' ? (
-                            <CheckCircleIcon className="text-green-600" />
-                          ) : (
-                            <XCircleIcon className="text-amber-600" />
-                          )}
-                          <span className={`text-sm ${row.status === 'Good' ? 'text-green-600' : 'text-amber-600'}`}>
-                            {row.status}
-                          </span>
-                        </div>
+                        <span className="font-semibold text-gray-900">{row.value.toLocaleString()}</span>
                       </td>
                     </tr>
                   ))}
@@ -337,6 +363,106 @@ function App() {
               ))}
             </div>
           </div>
+        </div>
+
+        {/* Control Cards Section */}
+        <div className="space-y-8">
+          {mockData.controls.map((control) => (
+            <div key={control.id} className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+              <h2 className="text-2xl font-bold text-gray-900 mb-6 text-center">Control {control.id}</h2>
+              
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                {/* Data Quality Status */}
+                <div className="bg-gray-50 rounded-lg p-4">
+                  <div className="flex items-center gap-2 mb-3">
+                    <ActivityIcon className="text-blue-600" />
+                    <h3 className="text-sm font-semibold text-gray-900">Data Quality Status</h3>
+                  </div>
+                  <StatusIndicator 
+                    isPositive={control.dataQualityStatus.isPositive} 
+                    value={Math.abs(control.dataQualityStatus.improvement)} 
+                  />
+                </div>
+
+                {/* Global Data Quality */}
+                <div className="bg-gray-50 rounded-lg p-4">
+                  <div className="flex items-center gap-2 mb-3">
+                    <TargetIcon className="text-green-600" />
+                    <h3 className="text-sm font-semibold text-gray-900">Global Data Quality</h3>
+                  </div>
+                  <div className="text-center">
+                    <div className="text-2xl font-bold text-green-600 mb-2">
+                      {control.globalDataQuality}%
+                    </div>
+                    <div className="w-full bg-gray-200 rounded-full h-1.5">
+                      <div 
+                        className="bg-green-500 h-1.5 rounded-full transition-all duration-500" 
+                        style={{ width: `${control.globalDataQuality}%` }}
+                      ></div>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Anomalies Treated */}
+                <div className="bg-gray-50 rounded-lg p-4">
+                  <div className="flex items-center gap-2 mb-3">
+                    <CheckCircleIcon className="text-green-600" />
+                    <h3 className="text-sm font-semibold text-gray-900">Anomalies Treated</h3>
+                  </div>
+                  <div className="text-center">
+                    <div className="text-2xl font-bold text-green-600">
+                      {control.anomaliesTreated}
+                    </div>
+                    <div className="text-xs text-gray-600">Since last quarter</div>
+                  </div>
+                </div>
+
+                {/* Justified Anomalies */}
+                <div className="bg-gray-50 rounded-lg p-4">
+                  <div className="flex items-center gap-2 mb-3">
+                    <CheckCircleIcon className="text-blue-600" />
+                    <h3 className="text-sm font-semibold text-gray-900">Justified Anomalies</h3>
+                  </div>
+                  <div className="text-center">
+                    <div className="text-2xl font-bold text-blue-600">
+                      {control.justifiedAnomalies}
+                    </div>
+                  </div>
+                </div>
+
+                {/* Unjustified Anomalies */}
+                <div className="bg-gray-50 rounded-lg p-4">
+                  <div className="flex items-center gap-2 mb-3">
+                    <XCircleIcon className="text-red-600" />
+                    <h3 className="text-sm font-semibold text-gray-900">Unjustified Anomalies</h3>
+                  </div>
+                  <div className="grid grid-cols-2 gap-3 text-center">
+                    <div>
+                      <div className="text-lg font-bold text-green-600">
+                        {control.unjustifiedAnomalies.afterRules}
+                      </div>
+                      <div className="text-xs text-gray-600">After Rules</div>
+                    </div>
+                    <div>
+                      <div className="text-lg font-bold text-red-600">
+                        {control.unjustifiedAnomalies.beforeRules}
+                      </div>
+                      <div className="text-xs text-gray-600">Before Rules</div>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Quarterly Evolution Graph */}
+                <div className="bg-gray-50 rounded-lg p-4">
+                  <div className="flex items-center gap-2 mb-3">
+                    <BarChartIcon className="text-indigo-600" />
+                    <h3 className="text-sm font-semibold text-gray-900">Last 3 Quarters</h3>
+                  </div>
+                  <QuarterlyChart data={control.quarterlyData} />
+                </div>
+              </div>
+            </div>
+          ))}
         </div>
       </div>
     </div>
