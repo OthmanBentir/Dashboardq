@@ -47,6 +47,33 @@ const mockData = {
   }))
 };
 
+const controlDefinitions = [
+  {
+    title: "Data Completeness",
+    definition: "Ensures all required data fields are populated and no critical information is missing from records."
+  },
+  {
+    title: "Data Accuracy",
+    definition: "Validates that data values are correct, precise, and reflect real-world entities accurately."
+  },
+  {
+    title: "Data Consistency",
+    definition: "Maintains uniform data formats, standards, and values across different systems and databases."
+  },
+  {
+    title: "Data Timeliness",
+    definition: "Ensures data is current, up-to-date, and available when needed for business operations."
+  },
+  {
+    title: "Data Validity",
+    definition: "Verifies that data conforms to defined business rules, constraints, and acceptable value ranges."
+  },
+  {
+    title: "Data Uniqueness",
+    definition: "Prevents duplicate records and ensures each data entity is represented only once in the system."
+  }
+];
+
 // CSS-based icon components
 const TrendingUpIcon = ({ className }: { className?: string }) => (
   <div className={`inline-flex items-center justify-center ${className}`}>
