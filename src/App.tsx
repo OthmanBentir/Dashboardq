@@ -72,6 +72,64 @@ const controlDefinitions = [
     title: "Data Uniqueness",
     definition: "Prevents duplicate records and ensures each data entity is represented only once in the system."
   }
+};
+
+// Global anomalies data for stacked chart
+const globalAnomaliesData = [
+ {
+   quarter: 'Q1 2024',
+   control1: 45,
+   control2: 32,
+   control3: 28,
+   control4: 38,
+   control5: 41,
+   control6: 35
+ },
+ {
+   quarter: 'Q2 2024',
+   control1: 38,
+   control2: 29,
+   control3: 25,
+   control4: 33,
+   control5: 36,
+   control6: 31
+ },
+ {
+   quarter: 'Q3 2024',
+   control1: 42,
+   control2: 35,
+   control3: 22,
+   control4: 29,
+   control5: 33,
+   control6: 28
+ },
+ {
+   quarter: 'Q4 2024',
+   control1: 35,
+   control2: 27,
+   control3: 19,
+   control4: 25,
+   control5: 30,
+   control6: 24
+ }
+];
+
+const controlColors = [
+ '#ef4444', // red-500
+ '#f97316', // orange-500
+ '#eab308', // yellow-500
+ '#22c55e', // green-500
+ '#3b82f6', // blue-500
+ '#8b5cf6'  // violet-500
+];
+
+const controlLabels = [
+ 'Data Completeness',
+ 'Data Accuracy',
+ 'Data Consistency',
+ 'Data Timeliness',
+ 'Data Validity',
+ 'Data Uniqueness'
 ];
 
 // CSS-based icon components
@@ -243,6 +301,72 @@ const QuarterlyChart = ({ data }: { data: Array<{ quarter: string; value: number
   </div>
 );
 
+const GlobalAnomaliesStackedChart = () => {
+ const maxTotal = Math.max(...globalAnomaliesData.map(item => 
+   item.control1 + item.control2 + item.control3 + item.control4 + item.control5 + item.control6
+ ));
+
+ return (
+   <div className="space-y-4">
+     <div className="flex justify-between items-end h-64 gap-4">
+       {globalAnomaliesData.map((quarter, quarterIndex) => {
+         const total = quarter.control1 + quarter.control2 + quarter.control3 + quarter.control4 + quarter.control5 + quarter.control6;
+         const controls = [quarter.control1, quarter.control2, quarter.control3, quarter.control4, quarter.control5, quarter.control6];
+         
+         return (
+           <div key={quarterIndex} className="flex flex-col items-center gap-2">
+             <div className="relative w-16 bg-gray-200 rounded" style={{ height: '200px' }}>
+               {controls.map((value, controlIndex) => {
+                 const previousValues = controls.slice(0, controlIndex).reduce((sum, val) => sum + val, 0);
+                 const heightPercentage = (value / maxTotal) * 100;
+                 const bottomPercentage = (previousValues / maxTotal) * 100;
+                 
+                 return (
+                   <div
+                     key={controlIndex}
+                     className="absolute w-full rounded transition-all duration-300 hover:opacity-80 group"
+                     style={{
+                       height: `${heightPercentage}%`,
+                       bottom: `${bottomPercentage}%`,
+                       backgroundColor: controlColors[controlIndex]
+                     }}
+                     title={`${controlLabels[controlIndex]}: ${value} anomalies`}
+                   >
+                     <div className="absolute inset-0 flex items-center justify-center">
+                       <span className="text-white text-xs font-semibold opacity-0 group-hover:opacity-100 transition-opacity">
+                         {value}
+                       </span>
+                     </div>
+                   </div>
+                 );
+               })}
+             </div>
+             <div className="text-center">
+               <div className="text-sm font-semibold text-gray-900">{quarter.quarter}</div>
+               <div className="text-xs text-gray-600">Total: {total}</div>
+             </div>
+           </div>
+         );
+       })}
+     </div>
+     
+     {/* Legend */}
+     <div className="grid grid-cols-2 md:grid-cols-3 gap-3 mt-6">
+       {controlLabels.map((label, index) => (
+         <div key={index} className="flex items-center gap-2">
+           <div 
+             className="w-4 h-4 rounded"
+             style={{ backgroundColor: controlColors[index] }}
+           ></div>
+           <span className="text-sm text-gray-700">{label}</span>
+         </div>
+       ))}
+     </div>
+   </div>
+ );
+}
+);
+
 function App() {
   return (
     <div className="min-h-screen bg-gray-50 p-6">
@@ -390,6 +514,15 @@ function App() {
               ))}
             </div>
           </div>
+        </div>
+
+        {/* Global Anomalies Chart */}
+        <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-8">
+          <div className="text-center mb-6">
+            <h2 className="text-2xl font-bold text-gray-900 mb-2">Global Anomalies Overview</h2>
+            <p className="text-gray-600">Quarterly distribution of anomalies across all data quality controls</p>
+          </div>
+          <GlobalAnomaliesStackedChart />
         </div>
 
         {/* Control Cards Section */}
