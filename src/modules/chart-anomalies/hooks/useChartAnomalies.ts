@@ -72,23 +72,8 @@ export const useChartAnomalies = () => {
     };
   });
 
-  const aggregatedData = filteredData.reduce((acc, item) => {
-    const key = `${item.bu}-${item.quarter}`;
-    if (!acc[key]) {
-      acc[key] = {
-        bu: item.bu,
-        quarter: item.quarter,
-        totalAnomalies: 0
-      };
-    }
-    acc[key].totalAnomalies += item.anomalyCount;
-    return acc;
-  }, {} as Record<string, { bu: string; quarter: string; totalAnomalies: number }>);
-
-  const chartDataFinal = Object.values(aggregatedData);
-
   return { 
-    data: chartDataFinal, 
+    data: chartData, 
     rawData: data,
     loading, 
     error, 
