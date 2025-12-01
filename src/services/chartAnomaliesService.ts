@@ -14,7 +14,7 @@ export const fetchChartAnomaliesData = async (): Promise<ChartAnomalyData[]> => 
   const mockData: ChartAnomalyData[] = [];
   const bus = ['MARK', 'GLBA', 'Other BU'];
   const quarters = ['This Quarter', 'Last Quarter', 'Previous Quarter'];
-  const controls = ['Control C', 'Control D', 'Control E', 'Control F', 'Control G', 'Control H', 'Control I', 'Control J', 'Control K', 'Control L', 'Control M', 'Control N', 'Control O', 'Control P', 'Control Q', 'Control R', 'Control S', 'Control T'];
+  const controls = ['Control C', 'Control E', 'Control F', 'Control J', 'Control H', 'Control T'];
 
   // Generate realistic mock data
   bus.forEach(bu => {

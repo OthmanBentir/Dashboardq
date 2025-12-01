@@ -14,7 +14,7 @@ export const useChartAnomalies = () => {
   const [filters, setFilters] = useState<FilterState>({
     bus: ['MARK', 'GLBA', 'Other BU'], // Default: all selected
     quarters: ['This Quarter', 'Last Quarter', 'Previous Quarter'], // Default: all selected
-    controls: ['Control C', 'Control D', 'Control E', 'Control F', 'Control G', 'Control H'] // Default: first 6 selected
+    controls: ['Control C', 'Control E', 'Control F', 'Control J', 'Control H', 'Control T'] // Default: all selected
   });
 
   useEffect(() => {
@@ -44,20 +44,33 @@ export const useChartAnomalies = () => {
     filters.controls.includes(item.control)
   );
 
-  const aggregatedData = filteredData.reduce((acc, item) => {
-    const key = `${item.bu}-${item.quarter}`;
-    if (!acc[key]) {
-      acc[key] = {
-        bu: item.bu,
-        quarter: item.quarter,
-        totalAnomalies: 0
+  // Group data by quarter and BU, then by control
+  const chartData = filters.quarters.map(quarter => {
+    const quarterData = filteredData.filter(item => item.quarter === quarter);
+    
+    const buData = filters.bus.map(bu => {
+      const buQuarterData = quarterData.filter(item => item.bu === bu);
+      
+      const controlBreakdown = filters.controls.reduce((acc, control) => {
+        const controlData = buQuarterData.find(item => item.control === control);
+        acc[control] = controlData ? controlData.anomalyCount : 0;
+        return acc;
+      }, {} as Record<string, number>);
+      
+      const total = Object.values(controlBreakdown).reduce((sum, count) => sum + count, 0);
+      
+      return {
+        bu,
+        total,
+        controls: controlBreakdown
       };
-    }
-    acc[key].totalAnomalies += item.anomalyCount;
-    return acc;
-  }, {} as Record<string, { bu: string; quarter: string; totalAnomalies: number }>);
-
-  const chartData = Object.values(aggregatedData);
+    });
+    
+    return {
+      quarter,
+      bus: buData
+    };
+  });
 
   return { 
     data: chartData, 

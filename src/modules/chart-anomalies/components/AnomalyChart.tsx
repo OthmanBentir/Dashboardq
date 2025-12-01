@@ -20,36 +20,47 @@ ChartJS.register(
 
 interface AnomalyChartProps {
   data: Array<{
-    bu: string;
     quarter: string;
-    totalAnomalies: number;
+    bus: Array<{
+      bu: string;
+      total: number;
+      controls: Record<string, number>;
+    }>;
   }>;
 }
 
 const AnomalyChart: React.FC<AnomalyChartProps> = ({ data }) => {
-  // Define consistent colors for each BU
-  const buColors = {
-    'MARK': '#ef4444', // red-500
-    'GLBA': '#3b82f6', // blue-500
-    'Other BU': '#10b981' // emerald-500
+  // Define consistent colors for each control
+  const controlColors = {
+    'Control C': '#ef4444', // red-500
+    'Control E': '#f97316', // orange-500
+    'Control F': '#eab308', // yellow-500
+    'Control J': '#22c55e', // green-500
+    'Control H': '#3b82f6', // blue-500
+    'Control T': '#8b5cf6'  // violet-500
   };
 
-  // Get unique quarters and BUs
-  const quarters = [...new Set(data.map(item => item.quarter))].sort();
-  const bus = [...new Set(data.map(item => item.bu))].sort();
+  // Get unique quarters and controls
+  const quarters = data.map(item => item.quarter);
+  const controls = ['Control C', 'Control E', 'Control F', 'Control J', 'Control H', 'Control T'];
 
-  // Prepare datasets for each BU
-  const datasets = bus.map(bu => {
-    const buData = quarters.map(quarter => {
-      const item = data.find(d => d.bu === bu && d.quarter === quarter);
-      return item ? item.totalAnomalies : 0;
+  // Prepare datasets for each control (stacked)
+  const datasets = controls.map(control => {
+    const controlData = quarters.map(quarter => {
+      const quarterData = data.find(d => d.quarter === quarter);
+      if (!quarterData) return 0;
+      
+      // Sum this control across all BUs for this quarter
+      return quarterData.bus.reduce((sum, buData) => {
+        return sum + (buData.controls[control] || 0);
+      }, 0);
     });
 
     return {
-      label: bu,
-      data: buData,
-      backgroundColor: buColors[bu as keyof typeof buColors] || '#6b7280',
-      borderColor: buColors[bu as keyof typeof buColors] || '#6b7280',
+      label: control,
+      data: controlData,
+      backgroundColor: controlColors[control as keyof typeof controlColors] || '#6b7280',
+      borderColor: controlColors[control as keyof typeof controlColors] || '#6b7280',
       borderWidth: 1,
       borderRadius: 4,
       borderSkipped: false,
@@ -64,6 +75,37 @@ const AnomalyChart: React.FC<AnomalyChartProps> = ({ data }) => {
   const options = {
     responsive: true,
     maintainAspectRatio: false,
+    scales: {
+      x: {
+        stacked: true,
+        title: {
+          display: true,
+          text: 'Quarters',
+          font: {
+            size: 14,
+            weight: 'bold' as const,
+          },
+        },
+        grid: {
+          display: false,
+        },
+      },
+      y: {
+        stacked: true,
+        title: {
+          display: true,
+          text: 'Number of Anomalies',
+          font: {
+            size: 14,
+            weight: 'bold' as const,
+          },
+        },
+        beginAtZero: true,
+        grid: {
+          color: 'rgba(0, 0, 0, 0.1)',
+        },
+      },
+    },
     plugins: {
       legend: {
         position: 'top' as const,
@@ -86,37 +128,18 @@ const AnomalyChart: React.FC<AnomalyChartProps> = ({ data }) => {
         callbacks: {
           label: function(context: any) {
             return `${context.dataset.label}: ${context.parsed.y} anomalies`;
+          },
+          afterBody: function(context: any) {
+            if (context.length > 0) {
+              const quarterData = data.find(d => d.quarter === context[0].label);
+              if (quarterData) {
+                const total = quarterData.bus.reduce((sum, buData) => sum + buData.total, 0);
+                return [`Total: ${total} anomalies`];
+              }
+            }
+            return [];
           }
         }
-      },
-    },
-    scales: {
-      x: {
-        title: {
-          display: true,
-          text: 'Quarters',
-          font: {
-            size: 14,
-            weight: 'bold' as const,
-          },
-        },
-        grid: {
-          display: false,
-        },
-      },
-      y: {
-        title: {
-          display: true,
-          text: 'Number of Anomalies',
-          font: {
-            size: 14,
-            weight: 'bold' as const,
-          },
-        },
-        beginAtZero: true,
-        grid: {
-          color: 'rgba(0, 0, 0, 0.1)',
-        },
       },
     },
     interaction: {
@@ -128,8 +151,8 @@ const AnomalyChart: React.FC<AnomalyChartProps> = ({ data }) => {
   return (
     <div className="bg-white rounded-lg shadow-sm border border-gray-200">
       <div className="px-6 py-4 border-b border-gray-200">
-        <h2 className="text-lg font-semibold text-gray-900">Global Anomaly Overview</h2>
-        <p className="text-sm text-gray-600 mt-1">Grouped bar chart showing anomalies by Business Unit across quarters</p>
+        <h2 className="text-lg font-semibold text-gray-900">Global Anomaly Overview by Control</h2>
+        <p className="text-sm text-gray-600 mt-1">Stacked bar chart showing how each control contributes to total anomalies per quarter</p>
       </div>
       <div className="p-6">
         <div style={{ height: '400px' }}>
